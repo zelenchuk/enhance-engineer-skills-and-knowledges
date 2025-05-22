@@ -1,9 +1,7 @@
 class CustomArray {
-  _data = [];
-  _length;
-
   constructor() {
     this._length = 0;
+    this._data = [];
   }
 
   increaceCounter() {
@@ -72,7 +70,7 @@ a.remove(2);
 a.remove(0);
 a.remove(0);
 
-console.log("||",a.length)
+console.log(a.length)
 console.log(a.data)
 
 
