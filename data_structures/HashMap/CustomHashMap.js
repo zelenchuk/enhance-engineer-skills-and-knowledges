@@ -1,23 +1,53 @@
 class CustomHashMap {
-  constructor() {
-    // тут ты можешь создать массив бакетов, например
+  constructor(size = 8) {
+    this._buckets = new Array(size)
+      .fill(null)
+      .map(() => []);
+  }
+
+  _hash(key) {
+    // Простой хеш (можно заменить позже)
+    let hash = 0;
+    for (let char of key.toString()) {
+      hash += char.charCodeAt(0);
+    }
+    return hash % this._buckets.length;
   }
 
   set(key, value) {
-    // добавь или обнови значение по ключу
+    const index = this._hash(key);
+    const bucket = this._buckets[index];
+
+    for (let pair of bucket) {
+      if (pair[0] === key) {
+        pair[1] = value;
+        return;
+      }
+    }
+
+    bucket.push([key, value]);
   }
 
+
   get(key) {
-    // верни значение по ключу или undefined
+    // Твоя логика
   }
 
   has(key) {
-    // верни true/false — есть ли такой ключ
+    // Твоя логика
   }
 
   remove(key) {
-    // удали ключ и его значение
+    // Твоя логика
   }
+
 }
+
+const hashMap = new CustomHashMap();
+
+
+hashMap.set("name", "Serhii");
+
+console.log(hashMap);
 
 module.exports = CustomHashMap;
