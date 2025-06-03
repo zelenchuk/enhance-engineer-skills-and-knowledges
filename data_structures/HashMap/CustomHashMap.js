@@ -44,7 +44,7 @@ class CustomHashMap {
 }
 
 const hashMap = new CustomHashMap();
-
+console.log(hashMap);
 
 hashMap.set("name", "Serhii");
 
