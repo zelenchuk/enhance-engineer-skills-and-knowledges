@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Enhanced Graph Visualization</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f0f2f5;
+    }
+    svg {
+      width: 100vw;
+      height: 100vh;
+    }
+    line.link {
+      stroke: #999;
+      stroke-width: 2;
+      marker-end: url(#arrowhead);
+    }
+    circle.node {
+      fill: #69b3a2;
+      stroke: #333;
+      stroke-width: 1.5;
+      cursor: pointer;
+    }
+    text.label {
+      font-size: 14px;
+      pointer-events: none;
+      fill: #222;
+    }
+    text.weight {
+      font-size: 12px;
+      fill: #555;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<svg></svg>
+
+<script>
+  const nodes = [
+    { id: 'A' },
+    { id: 'B' },
+    { id: 'C' },
+    { id: 'D' },
+    { id: 'E' }
+  ];
+
+  const links = [
+    { source: 'A', target: 'B', weight: 5 },
+    { source: 'A', target: 'C', weight: 3 },
+    { source: 'B', target: 'D', weight: 2 },
+    { source: 'C', target: 'E', weight: 4 },
+    { source: 'D', target: 'E', weight: 1 }
+  ];
+
+  const svg = d3.select("svg");
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  // 🔼 Стрелки для направленных рёбер
+  svg.append("defs").append("marker")
+    .attr("id", "arrowhead")
+    .attr("viewBox", "-0 -5 10 10")
+    .attr("refX", 25)
+    .attr("refY", 0)
+    .attr("orient", "auto")
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("xoverflow", "visible")
+    .append("svg:path")
+    .attr("d", "M 0,-5 L 10,0 L 0,5")
+    .attr("fill", "#999")
+    .style("stroke", "none");
+
+  const simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id(d => d.id).distance(140))
+    .force("charge", d3.forceManyBody().strength(-400))
+    .force("center", d3.forceCenter(width / 2, height / 2));
+
+  const link = svg.selectAll("line.link")
+    .data(links)
+    .enter().append("line")
+    .attr("class", "link");
+
+  const edgeWeight = svg.selectAll("text.weight")
+    .data(links)
+    .enter().append("text")
+    .attr("class", "weight")
+    .text(d => d.weight);
+
+  const node = svg.selectAll("circle.node")
+    .data(nodes)
+    .enter().append("circle")
+    .attr("class", "node")
+    .attr("r", 20)
+    .call(drag(simulation));
+
+  const label = svg.selectAll("text.label")
+    .data(nodes)
+    .enter().append("text")
+    .attr("class", "label")
+    .text(d => d.id)
+    .attr("text-anchor", "middle")
+    .attr("dy", ".35em");
+
+  simulation.on("tick", () => {
+    // Update links
+    link
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
+
+    // Update edge weights (positioned at midpoint)
+    edgeWeight
+      .attr("x", d => (d.source.x + d.target.x) / 2)
+      .attr("y", d => (d.source.y + d.target.y) / 2);
+
+    // Update nodes
+    node
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
+
+    // Update labels
+    label
+      .attr("x", d => d.x)
+      .attr("y", d => d.y);
+  });
+
+  function drag(simulation) {
+    return d3.drag()
+      .on("start", (event, d) => {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      })
+      .on("drag", (event, d) => {
+        d.fx = event.x;
+        d.fy = event.y;
+      })
+      .on("end", (event, d) => {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      });
+  }
+</script>
+
+</body>
+</html>
