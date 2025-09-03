@@ -57,12 +57,27 @@ const findMedianSortedArrays = function(nums1, nums2) {
 
 
 
-const nums1 = [1,3];
-const nums2 = [2];
+const nums1 = [1,2]
+const nums2 = [3,4]
 
 // [1,2]
 // [3,4]
 
 
 
-console.log(findMedianSortedArrays(nums1, nums2));
+// console.log(findMedianSortedArrays(nums1, nums2));
+
+
+
+const getMedianOfSortedArray = (arr) => {
+  const x = arr.length;
+  const mid = Math.floor(x / 2);
+
+  return x % 2 === 0
+    ? arr[mid - 1] + arr[mid] / 2 // even
+    : arr[mid];  // odd
+}
+
+const arr = [1,2,3,4,5,6,7,8,9,10]
+
+console.log(getMedianOfSortedArray(arr));
