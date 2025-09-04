@@ -8,36 +8,23 @@ const arr = [5, 2, 4, 6, 1, 3];
 
 
 const sortArr = (arr, reversed = false) => {
-  let j = 1;
   let i = 0;
 
-  while ( i <= arr.length - 1) {
-
-    // если левое число меньше правого, то мы, на этом шаге - меняем их местами, пропуская большее вперед, а меньшее назад относительно счетчика цыкла
-    if (arr[i] < arr[j]) {
-      let a = arr[i];
-      let b = arr[j];
-      arr[i] = a;
-      arr[j] = b;
-    }
+  while ( i < arr.length - 1) {
 
     // если левое число больше правого, то мы меняем их местами - прокидываем меньшее число в лево, и сбрасываем счетчик, чтобы убедиться, что мы никого не пропустили.
-    if (arr[i] > arr[j]) {
-      let a = arr[j];
-      let b = arr[i];
-      arr[i] = a;
-      arr[j] = b;
-
+    if (
+      (!reversed && arr[i] > arr[i + 1]) ||
+      (reversed && arr[i] < arr[i + 1])
+    ){
+      [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]
       // сбрасываем наши счетчики на 2 шага назад, зная, что цыкл всегда инкрементирует значения i и j, и мы сможем проверить еще нашу пару после переставновки.
-      i = i - 2;
-      j = j - 2;
+      if (i > 0) {
+        i--;
+      }
+    }else {
+      i++;
     }
-
-    i++;
-    j++;
-
-    console.log(arr);
-
   }
 
   return arr
@@ -45,4 +32,5 @@ const sortArr = (arr, reversed = false) => {
 }
 
 
-sortArr(arr)
+console.log(sortArr(arr));
+console.log(sortArr(arr, true));
