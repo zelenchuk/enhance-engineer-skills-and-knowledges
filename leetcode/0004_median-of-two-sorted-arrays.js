@@ -74,10 +74,11 @@ const getMedianOfSortedArray = (arr) => {
   const mid = Math.floor(x / 2);
 
   return x % 2 === 0
-    ? arr[mid - 1] + arr[mid] / 2 // even
+    ? (arr[mid - 1] + arr[mid]) / 2 // even
     : arr[mid];  // odd
 }
 
-const arr = [1,2,3,4,5,6,7,8,9,10]
+// const arr = [1,2,3,4,5,6,7,8,9,10]
+const arr = [1, 2]
 
 console.log(getMedianOfSortedArray(arr));
